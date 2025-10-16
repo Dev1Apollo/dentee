@@ -1073,59 +1073,6 @@ Vraj Dental Clinics Pvt Ltd.";
 			
 			if(Auth::user()){
 				
-				// $reportCollection = SuggestedTreatmentPayment::select(
-				// 			DB::raw('sum(order_payment_detail.amount) as amount'),
-				// 			DB::raw('DATE_FORMAT(order_master.created_at, "%d-%M-%Y") as order_date'),
-				// 			'patients.patient_id',
-				// 			'patients.name_prefix as name_prefix',
-				// 			'patients.name as patient_name',
-				// 			'order_payment_detail.payment_mode',
-				// 			'order_payment_detail.order_payment_detail_id  as receipt',
-				// 			'branches.branch_name',
-				// 			'suggested_treatments.treatmentBydoctor_id',
-				// 			'suggested_treatment_payment.patient_id',
-				// 			"groups.group_name"
-				// 			)
-				// ->whereNot('order_master.is_paid', 0)
-				// ->where(['suggested_treatment_payment.branch_id' => $branch_id,'suggested_treatment_payment.clinic_id' => $clinic_id,'order_master.istatus' =>0])
-				// ->join('patients', 'patients.patient_id', '=', 'suggested_treatment_payment.patient_id')
-				// ->join('order_payment_detail', 'order_payment_detail.order_payment_detail_id', '=', 'suggested_treatment_payment.order_payment_detail_id')
-				// ->join('order_detail', 'order_detail.order_detail_id', '=', 'suggested_treatment_payment.order_detail_id')
-				// ->join('order_master', 'order_master.order_master_id', '=', 'suggested_treatment_payment.order_id')
-				// ->join('branches', 'branches.branch_id', '=', 'suggested_treatment_payment.branch_id')
-				// ->join('groups','groups.group_id','=','patients.group_id')
-				// ->join('suggested_treatments', 'suggested_treatments.suggested_treatment_id', '=', 'suggested_treatment_payment.suggested_treatments_id')
-				// ->where("suggested_treatment_payment.istatus","=",0)
-				// ->when($request->doctor_id, function ($query) use ($request) {
-				// 	$query->where('suggested_treatments.treatmentBydoctor_id' ,'=',$request->doctor_id);
-    //             })
-			 //   ->when($request->fromDate, function ($query) use ($request) {
-				// 	$query->where(DB::raw("DATE_FORMAT(order_master.created_at,'%Y-%m-%d')"),'>=',DB::raw("DATE_FORMAT('".$request->fromDate."','%Y-%m-%d')"));
-				// })
-    // 			->when($request->toDate, function ($query) use ($request) {
-				// 	$query->where(DB::raw("DATE_FORMAT(order_master.created_at,'%Y-%m-%d')"),'<=',DB::raw("DATE_FORMAT('".$request->toDate."','%Y-%m-%d')"));
-				// })
-    // 			->when($request->selected_date, function ($query) use ($request) {
-				// 	$query->where(DB::raw("DATE_FORMAT(order_master.created_at,'%Y-%m-%d')"),'=',DB::raw("DATE_FORMAT('".$request->selected_date."','%Y-%m-%d')"));
-				// })
-    // 			->when($request->search_branch_id, function ($query) use ($request) {
-				// 	$query->where('suggested_treatment_payment.branch_id' ,'=',$request->search_branch_id);
-				// })	
-    // 			->when($request->payment_mode, function ($query) use ($request) {
-				//     $query->where('order_payment_detail.payment_mode' ,'=',$request->payment_mode);
-    //             })
-    //             ->when($request->group_id, function ($query) use ($request) {
-				// 	$query->where('patients.group_id' ,'=',$request->group_id);
-    //             })
-    // 			->when($request->month, function ($query) use ($request) {
-				// 	$query->where(DB::raw("MONTH(order_master.created_at)"),'=',$request->month);
-				// })
-    // 			->when($request->year, function ($query) use ($request) {
-				// 	$query->where(DB::raw("YEAR(order_master.created_at)"),'=',$request->year);
-				// })
-				// ->groupBy('patients.patient_id')
-				// ->get(); 
-				
 				$reportCollection = OrderPaymentDetail::select(
 							DB::raw('sum(order_payment_detail.amount) as amount'),
 							DB::raw('DATE_FORMAT(order_payment_detail.payment_date, "%d-%M-%Y") as order_date'),
@@ -1176,7 +1123,7 @@ Vraj Dental Clinics Pvt Ltd.";
     			->when($request->selected_date, function ($query) use ($request) {
 					$query->where(DB::raw("DATE_FORMAT(order_payment_detail.payment_date,'%Y-%m-%d')"),'=',DB::raw("DATE_FORMAT('".$request->selected_date."','%Y-%m-%d')"));
 				})
-    // 			->when($request->search_branch_id, function ($query) use ($request) {
+    			// ->when($request->search_branch_id, function ($query) use ($request) {
 				// 	$query->where('suggested_treatment_payment.branch_id' ,'=',$request->search_branch_id);
 				// })	
     			->when($request->payment_mode, function ($query) use ($request) {
@@ -1195,10 +1142,10 @@ Vraj Dental Clinics Pvt Ltd.";
 				->groupBy('patients.patient_id','order_payment_detail.payment_date')
 				->get(); 
 				// ->toSql();
-			 //   dd($reportCollection);
+			 	// dd($reportCollection);
 				
 				// $branchData = Branch::where('branch_id','=',$request->branch_id)->first();
-    // 			$branchName = $branchData->branch_name;
+    			// $branchName = $branchData->branch_name;
                 $branchData = Branch::whereIn('branch_id',$request->branch_id)->get();
 				$branchName = "";
 				foreach($branchData as $branch){
@@ -1286,16 +1233,13 @@ Vraj Dental Clinics Pvt Ltd.";
     						'patient_id' =>$ReportCollection->patient_id,
     						"group_name" => $ReportCollection->group_name,
     						
-    						);
-						
+    						);						
 							/* return response()->json([
 									'status' => 'success',
 									'message' => 'reportData',
 									'dailyCollection' => $arr
-							], 401); */
-							
-						}else{
-							
+							], 401); */							
+						}else{							
 							/* return response()->json([
 									'status' => 'success',
 									'message' => 'reportData',
@@ -1400,28 +1344,28 @@ Vraj Dental Clinics Pvt Ltd.";
 			
 			if(Auth::user()){
 			
-			$lastOrderData = OrderMaster::where(['patient_id' => $request->patient_id,
-						'branch_id' => $request->branch_id,'clinic_id' => $request->clinic_id,'istatus' => 0])
-					->orderBy('created_at', 'desc')
-					->whereNot('is_paid', 2)
-					->first();
-				
-			$isPaid = "";
-			$orderMasterId = "";
+				$lastOrderData = OrderMaster::where(['patient_id' => $request->patient_id,
+							'branch_id' => $request->branch_id,'clinic_id' => $request->clinic_id,'istatus' => 0])
+						->orderBy('created_at', 'desc')
+						->whereNot('is_paid', 2)
+						->first();
+					
+				$isPaid = "";
+				$orderMasterId = "";
 			
-			if(!empty($lastOrderData)){
-				
-				$orderMasterId = $lastOrderData->order_master_id;
-				$isPaid = $lastOrderData->is_paid;
-				
+				if(!empty($lastOrderData)){
+					
+					$orderMasterId = $lastOrderData->order_master_id;
+					$isPaid = $lastOrderData->is_paid;
+					
+					return response()->json([
+							'status' => 'success',
+							'message' => 'Order Details.',
+							'order_id' => $orderMasterId
+						]);
+				}
+			
 				return response()->json([
-						'status' => 'success',
-						'message' => 'Order Details.',
-						'order_id' => $orderMasterId
-					]);
-			}
-			
-			return response()->json([
     				'status' => 'success',
     				'message' => 'No bill generated for this patient Yet.',
     				'order_id' => $orderMasterId
@@ -1429,13 +1373,13 @@ Vraj Dental Clinics Pvt Ltd.";
 							
 							
 							
-		}else{
-			return response()->json([
-					'status' => 'error',
-					'message' => 'User is not Authorised.',
-				], 401);
+			}else{
+				return response()->json([
+						'status' => 'error',
+						'message' => 'User is not Authorised.',
+					], 401);
+			}
 		}
-	}
 		
 	public function tobecollectedlist(Request $request){
 			
@@ -1668,5 +1612,280 @@ Vraj Dental Clinics Pvt Ltd.";
 	    }
 	}	
 	
+	public function reportpatientcollection(Request $request){
+			
+		$clinic_id = $request->clinic_id;
+		$branch_id = $request->branch_id;
+		$pdffile = $request->pdffile;
+		$whatsappfile = $request->whatsappfile;
+		
+		if(Auth::user()){
+			
+			$reportCollection = OrderPaymentDetail::select(
+						DB::raw('sum(order_payment_detail.amount) as amount'),
+						//DB::raw('DATE_FORMAT(order_payment_detail.payment_date, "%d-%M-%Y") as order_date'),
+						'patients.patient_id',
+						'patients.name_prefix as name_prefix',
+						'patients.name as patient_name',
+						'order_payment_detail.payment_mode',
+						'order_payment_detail.order_payment_detail_id  as receipt',
+						'branches.branch_name',
+						//'suggested_treatments.treatmentBydoctor_id',
+						'order_payment_detail.patient_id',
+						"groups.group_name",
+						DB::raw('(select `suggested_treatments`.`treatmentBydoctor_id` from suggested_treatments inner join  suggested_treatment_payment on suggested_treatments.suggested_treatment_id=suggested_treatment_payment.suggested_treatments_id where suggested_treatment_payment.order_id=order_master.order_master_id limit 1) as treatmentBydoctor_id')
+						)
+			//->whereNot('order_master.is_paid', 0)
+			->where(['order_payment_detail.clinic_id' => $clinic_id,'order_master.istatus' =>0])
+			->where('order_payment_detail.amount','>',0)
+			->whereNull('patients.deleted_at')
+			->when($request->branch_id, fn ($query, $branch_id) => $query->WhereIn('order_payment_detail.branch_id',$branch_id))
+			->join('patients', 'patients.patient_id', '=', 'order_payment_detail.patient_id')
+			//->join('order_payment_detail', 'order_payment_detail.order_payment_detail_id', '=', 'suggested_treatment_payment.order_payment_detail_id')
+			->join('order_master', 'order_master.order_master_id', '=', 'order_payment_detail.order_id')
+			// ->join('order_detail', 'order_detail.order_id', '=', 'order_master.order_master_id')
+			->join('branches', 'branches.branch_id', '=', 'order_payment_detail.branch_id')
+			->join('groups','groups.group_id','=','patients.group_id')
+			//->leftjoin('suggested_treatment_payment', 'suggested_treatments.suggested_treatment_id', '=', 'suggested_treatment_payment.suggested_treatments_id')
+			//->join('suggested_treatments', 'suggested_treatments.suggested_treatment_id', '=', 'order_detail.suggested_treatment_id')
+			->where("order_payment_detail.istatus","=",0)
+			// ->when($request->doctor_id, function ($query) use ($request) {
+			// 	$query->where('suggested_treatments.treatmentBydoctor_id' ,'=',$request->doctor_id);
+			// })
+			->when($request->doctor_id, fn ($query, $doctor_id) => $query->WhereIn(
+				'order_master.order_master_id',
+				function ($query) use ($doctor_id) {
+					$query->select('suggested_treatment_payment.order_id')
+						->from(with(new SuggestedTreatments)->getTable())
+						->join('suggested_treatment_payment','suggested_treatments.suggested_treatment_id','=','suggested_treatment_payment.suggested_treatments_id')
+						//->where('suggested_treatment_payment.order_id','=','order_master.order_master_id')
+						->where('suggested_treatments.treatmentBydoctor_id', $doctor_id);
+				}
+			))
+			->when($request->fromDate, function ($query) use ($request) {
+				$query->where(DB::raw("DATE_FORMAT(order_payment_detail.payment_date,'%Y-%m-%d')"),'>=',DB::raw("DATE_FORMAT('".$request->fromDate."','%Y-%m-%d')"));
+			})
+			->when($request->toDate, function ($query) use ($request) {
+				$query->where(DB::raw("DATE_FORMAT(order_payment_detail.payment_date,'%Y-%m-%d')"),'<=',DB::raw("DATE_FORMAT('".$request->toDate."','%Y-%m-%d')"));
+			})
+			->when($request->selected_date, function ($query) use ($request) {
+				$query->where(DB::raw("DATE_FORMAT(order_payment_detail.payment_date,'%Y-%m-%d')"),'=',DB::raw("DATE_FORMAT('".$request->selected_date."','%Y-%m-%d')"));
+			})
+			// ->when($request->search_branch_id, function ($query) use ($request) {
+			// 	$query->where('suggested_treatment_payment.branch_id' ,'=',$request->search_branch_id);
+			// })	
+			->when($request->payment_mode, function ($query) use ($request) {
+				$query->where('order_payment_detail.payment_mode' ,'=',$request->payment_mode);
+			})
+			->when($request->group_id, function ($query) use ($request) {
+				$query->where('patients.group_id' ,'=',$request->group_id);
+			})
+			->when($request->month, function ($query) use ($request) {
+				$query->where(DB::raw("MONTH(order_payment_detail.payment_date)"),'=',$request->month);
+			})
+			->when($request->year, function ($query) use ($request) {
+				$query->where(DB::raw("YEAR(order_payment_detail.payment_date)"),'=',$request->year);
+			})
+			->orderBy('order_payment_detail.payment_date','asc')
+			->groupBy('patients.patient_id','order_payment_detail.payment_mode')
+			->get(); 
+			// ->toSql();
+			// dd($reportCollection);
+			
+			// $branchData = Branch::where('branch_id','=',$request->branch_id)->first();
+			// $branchName = $branchData->branch_name;
+			$branchData = Branch::whereIn('branch_id',$request->branch_id)->get();
+			$branchName = "";
+			foreach($branchData as $branch){
+				$branchName .= $branch->branch_name . ",";
+			}
+			$branchName = rtrim($branchName,",");
+			$Duration = "";
+			if(isset($request->fromDate) && $request->toDate != ""){
+				$Duration .= date('d-m-Y',strtotime($request->fromDate)) ." To ". date('d-m-Y',strtotime($request->toDate));
+			}
+			if(isset($request->selected_date) && $request->selected_date != ""){
+				$Duration .= $request->selected_date;
+			}
+			if((isset($request->month) && $request->month != "") && isset($request->year) && $request->year != ""){
+				$Duration .= $request->month ."-".$request->year;
+			}
+			
+			$arr = [];
+			$mode = "";
+			$grand_amount = 0;
+			
+			/* if ($reportCollection->isNotEmpty($reportCollection)) {
+					echo "vvvvvvvvvvv";
+			}else{
+				echo "xxxxxxxxx";
+			}
+			die; */ 
+			$Cash = 0;
+			$Cheque = 0;
+			$Card = 0;
+			$Online = 0;
+			$other = 0;
+			if(count($reportCollection) != 0){
+				
+				foreach($reportCollection as $ReportCollection){
+						
+					if($ReportCollection->amount != NULL)
+					{
+						$payment_mode = $ReportCollection->payment_mode;
+					
+						if($payment_mode == 1){
+							$mode = "Cash";
+						}else if($payment_mode == 2){
+							$mode = "Cheque";
+						}else if($payment_mode == 3){
+							$mode = "Card";
+						}else if($payment_mode == 4){
+							$mode = "RTGS";
+						}else if($payment_mode == 5){
+							$mode = "NEFT";
+						}else if($payment_mode == 6){
+							$mode = "Paytm";
+						}else if($payment_mode == 7){
+							$mode = "Coupons";
+						}else if($payment_mode == 8){
+							$mode = "Online";
+						}else if($payment_mode == 9){
+							$mode = "WriteOff";
+						}else if($payment_mode == 10){
+							$mode = "GooglePay";
+						}
+						
+						if($payment_mode == 1){
+							$Cash += $ReportCollection->amount;
+						}else if($payment_mode == 2){
+							$Cheque += $ReportCollection->amount;
+						}else if($payment_mode == 3){
+							$Card += $ReportCollection->amount;
+						}else if($payment_mode == 8){
+							$Online += $ReportCollection->amount;
+						} else {
+							$other += $ReportCollection->amount;
+						}
+						
+						$grand_amount += $ReportCollection->amount;
+						$arr[] = array(
+						
+						'amount' =>$ReportCollection->amount,
+						'order_date' =>$ReportCollection->order_date,
+						'patient_name' =>$ReportCollection->name_prefix." ".$ReportCollection->patient_name,
+						'payment_mode' =>$mode,
+						'receipt' =>"RCPT".$ReportCollection->receipt,
+						'branch_name' =>$ReportCollection->branch_name,
+						'treatmentBydoctor_id' =>$ReportCollection->treatmentBydoctor_id,
+						'patient_id' =>$ReportCollection->patient_id,
+						"group_name" => $ReportCollection->group_name,
+						
+						);						
+						/* return response()->json([
+								'status' => 'success',
+								'message' => 'reportData',
+								'dailyCollection' => $arr
+						], 401); */							
+					}else{							
+						/* return response()->json([
+								'status' => 'success',
+								'message' => 'reportData',
+								'dailyCollection' => $arr
+						], 401); */
+					}
+				}
+					
+					
+				if($pdffile == 1 && !empty($arr)){
+								
+					$pdf = PDF::loadView('patientcollection_report',['dailyCollection' => $arr,'grand_total' => $grand_amount,"branchName" => $branchName,"Duration" => $Duration]);
+							
+					$fileName = date('d-m-Y')."_patientCollection";
+					
+					$content = $pdf->download()->getOriginalContent();
+					Storage::put('public/assets/patientcollection_report/'.$fileName . '.pdf',$content);
+					
+					if($_SERVER['SERVER_NAME'] == "127.0.0.1"){
+						$pdf->save(public_path('assets/patientcollection_report/')  . $fileName. '.pdf');	
+					}else {
+						$pdf->save(public_path('../../vgdcapp.vrajdentalclinic.com/assets/patientcollection_report/')  . $fileName. '.pdf');
+
+					}
+			
+					$dailycollectionFile = asset('assets/patientcollection_report/'. $fileName. '.pdf');
+			
+					//return $pdf->download($fileName . '.pdf');
+					
+					$key = $_ENV['WHATSAPPKEY'];		
+					$dailycollectionListFile = asset('assets/patientcollection_report/'. $fileName. '.pdf');
+					$msg = "Dear User, Please find attached details of treatments.";
+								
+					if($whatsappfile == 1){
+						$users = new User();
+						$currentUser = Auth::user();
+
+						$mobileNo = $currentUser->mobile_no;
+						$status = $users->sendWhatsappMessage($mobileNo,$key,$msg,$dailycollectionFile);
+						
+						$statusofMessage = $status->status;
+						// $Response = $status->response;
+					
+						if($statusofMessage == "success"){
+						
+							return response()->json([
+								'status' => 'success',
+								'message' => 'DailyCollection Report sent on your registered mobile number.',
+								'dailycollectionFile' => $dailycollectionFile
+							]);
+							
+						}else{
+							
+							return response()->json([
+								'status' => 'error',
+								'message' => $Response.'.Please contact admin.',
+							], 401);
+						}
+					}else{
+						return response()->json([
+							'status' => 'success',
+							'message' => 'reportData',
+							'grand_total' => $grand_amount,
+							'dailycollection' => $arr,
+							'dailycollectionFile' => $dailycollectionFile
+						]);
+					}
+				}else{
+					return response()->json([
+						'status' => 'success',
+						'message' => 'reportData.',
+						'grand_total' => $grand_amount,
+						'dailycollection' => $arr,
+						"Cash" => $Cash,
+						"Cheque" => $Cheque,
+						"Card" => $Card,
+						"Online" => $Online,
+						"other" => $other
+					]);
+				}
+			}else{
+				return response()->json([
+					'status' => 'error',
+					'message' => 'No Record Found.',
+					'dailycollection' => $arr,
+					"Cash" => $Cash,
+					"Cheque" => $Cheque,
+					"Card" => $Card,
+					"Online" => $Online,
+					"other" => $other
+				]);
+			}
+		}else{
+			return response()->json([
+					'status' => 'error',
+					'message' => 'User is not Authorised.',
+			], 401);
+		}
+	}
 		
 }
