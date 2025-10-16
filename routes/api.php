@@ -191,6 +191,7 @@ Route::post('lastorderidbypatient', 'App\Http\Controllers\Api\OrderMasterControl
 Route::post('tobecollectedlist', 'App\Http\Controllers\Api\OrderMasterController@tobecollectedlist');
 Route::post('paymentcollctionlist', 'App\Http\Controllers\Api\OrderMasterController@paymentcollctionlist');
 
+Route::any('reportpatientcollection', 'App\Http\Controllers\Api\OrderMasterController@reportpatientcollection');
 
 Route::post('addmaterial', 'App\Http\Controllers\Api\MaterialMasterController@addMaterial');
 Route::post('updatematerial/{id}', 'App\Http\Controllers\Api\MaterialMasterController@updateMaterial');
